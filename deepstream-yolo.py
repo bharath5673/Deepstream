@@ -467,7 +467,7 @@ def main(args):
     streammux.set_property('height', 1080)
     streammux.set_property('batch-size', number_sources)
     streammux.set_property('batched-push-timeout', 4000000)
-    pgie.set_property('config-file-path', "/home/acer/Desktop/Projects/DeepStream-Yolo/config_infer_primary_yoloV5.txt")
+    pgie.set_property('config-file-path', "config_infer_primary_yoloV5.txt")
     pgie_batch_size=pgie.get_property("batch-size")
     if(pgie_batch_size != number_sources):
         print("WARNING: Overriding infer-config batch-size",pgie_batch_size," with number of sources ", number_sources," \n")
