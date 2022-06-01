@@ -1,2 +1,2 @@
-# YOLO - Deepstream
+# Deepstream-apps
 yolov5 on deepstream
