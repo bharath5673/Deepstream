@@ -1,5 +1,5 @@
 # Deepstream-apps
-yolov5 on deepstream-6.1-ubuntu20.04
+Yolov7 and yolov5 on deepstream-6.1-ubuntu20.04
 
 ![demo](demo.gif)
 
