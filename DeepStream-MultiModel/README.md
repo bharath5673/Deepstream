@@ -1,3 +1,3 @@
-# Deploy Multi Models With DeepStream #
+# Multi Models With DeepStream #
 
 ## Comming Soon... ;)  ##
