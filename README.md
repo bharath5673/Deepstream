@@ -12,6 +12,12 @@ Yolov7 and yolov5 on deepstream-6.1-ubuntu20.04
 
 <br>
 
+<br>
+<img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" />    
+<h2>DeepStream MultiModel</h2>
+@ https://github.com/bharath5673/Deepstream/tree/main/DeepStream-MultiModel
+
+<br>
 
 <br>
 <h2>Easy steps installation</h2> @
