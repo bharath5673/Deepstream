@@ -64,10 +64,10 @@ net-scale-factor=0.0039215697906911373
 #0=RGB, 1=BGR
 model-color-format=0
 
-#onnx-file=weights/yolov5n/yolov5n.onnx
+onnx-file=weights/yolov5n/yolov5n.onnx
 #model-engine-file=weights/yolov5n/yolov5n.onnx_b1_gpu0_fp32.engine
 
-onnx-file=weights/yolov5s/yolov5s.onnx
+# onnx-file=weights/yolov5s/yolov5s.onnx
 # model-engine-file=weights/yolov5s/yolov5s.onnx_b1_gpu0_fp32.engine
 
 network-mode=0
