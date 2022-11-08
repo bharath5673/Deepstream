@@ -2,4 +2,4 @@
 
 ![demo](output.gif)
 
-## Comming Soon... ;)  ##
+## Coming Soon... ;)  ##
