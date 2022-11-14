@@ -2,4 +2,10 @@
 
 ![demo](output.gif)
 
-## Coming Soon... ;)  ##
+
+```bash
+cd ./cars
+deepstream-app -c deepstream_test.txt
+
+
+```
