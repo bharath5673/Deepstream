@@ -122,7 +122,7 @@ gpu-id=0
 gie-unique-id=2
 nvbuf-memory-type=1
 operate-on-gie-id=1
-operate-on-class-ids=2
+operate-on-class-ids=0
 config-file=dstest2_sgie1_config.txt
 
 [secondary-gie2]
@@ -131,7 +131,7 @@ gpu-id=0
 gie-unique-id=3
 nvbuf-memory-type=1
 operate-on-gie-id=1
-operate-on-class-ids=2
+operate-on-class-ids=0
 config-file=dstest2_sgie2_config.txt
 
 [secondary-gie3]
@@ -140,7 +140,7 @@ gpu-id=0
 gie-unique-id=4
 nvbuf-memory-type=1
 operate-on-gie-id=1
-operate-on-class-ids=2
+operate-on-class-ids=0
 config-file=dstest2_sgie3_config.txt
 
 [tests]
