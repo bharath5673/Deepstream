@@ -1,8 +1,9 @@
 # Deepstream-Yolo
 
 Yolov7 and yolov5 on deepstream-6.1-ubuntu20.04
+![output3](https://user-images.githubusercontent.com/33729709/210166850-4169df79-6bda-46ee-8401-65117b82e918.gif)
 
-![demo](demo.gif)
+
 
 
 <br>
