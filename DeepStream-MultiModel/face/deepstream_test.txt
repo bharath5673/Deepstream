@@ -18,7 +18,7 @@ enable=1
 #Type - 1=CameraV4L2 2=URI 3=MultiURI
 type=3
 # uri=file:///opt/nvidia/deepstream/deepstream/samples/streams/sample_1080p_h264.mp4
-uri=file:///home/acer/Desktop/Projects/MyGitHub/Deepstream/DeepStream-MultiModel/face/test.h264
+uri=file:///MyGitHub/Deepstream/DeepStream-MultiModel/face/test.h264
 # uri=file:///home/neuron/Downloads/deepstream-app-python/face_mutli/face-demographics-walking-and-pause.h264
 num-sources=1
 gpu-id=0
