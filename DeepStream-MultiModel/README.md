@@ -1,16 +1,18 @@
 # Multi Models With DeepStream #
 
-![demo](output.gif)
+
+![output3](https://user-images.githubusercontent.com/33729709/210166814-232e7562-00be-4d87-8ced-c7d83810fea8.gif)
 
 
 ```bash
 cd ./cars
 deepstream-app -c deepstream_test.txt
 
-
 ```
 
-![demo](face/demo.gif)
+![output](https://user-images.githubusercontent.com/33729709/210166822-e38e2410-fb90-404d-b3bf-31cb5d443d2c.gif)
+
+
 
 
 ```bash
