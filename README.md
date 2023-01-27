@@ -51,7 +51,9 @@ ___
 <h2>Trajectory tracking on deepstream</h2>
 
 
-![output](https://user-images.githubusercontent.com/33729709/211142186-a9ecd225-4f90-4310-91df-862e243f8833.gif)
+
+![output3](https://user-images.githubusercontent.com/33729709/215127343-b540a737-d3bc-4fe8-8835-050497d325a3.gif)
+
 
 @ https://github.com/bharath5673/Deepstream/tree/main/DeepStream-Python
 <br>
