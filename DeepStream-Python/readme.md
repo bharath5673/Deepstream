@@ -1,7 +1,7 @@
  ```
+----------------
  ### cmds
- 
- 
+----------------
 
  python3 deepstream_test_yolo_save_vid.py /opt/nvidia/deepstream/deepstream-6.1/samples/streams/sample_720p.h264
 
