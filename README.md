@@ -64,3 +64,10 @@ ___
 <br>
 <h2>Easy steps installation</h2> @
 https://gist.github.com/bharath5673/800a18cc7474ce9c22fda6deaaa98354
+</br>
+
+___
+___
+<br>
+<h2> for YOLO Deepstream Configrations </h2>
+@https://github.com/marcoslucianops/DeepStream-Yolo
