@@ -1,6 +1,6 @@
 # Deepstream-Yolo
 
-Yolov7 and yolov5 on deepstream-6.1-ubuntu20.04
+YOLO on deepstream-6.1-ubuntu20.04
 
 ![output3](https://user-images.githubusercontent.com/33729709/210167948-382731f2-6905-44ca-aaf9-d35ae9d099a0.gif)
 
