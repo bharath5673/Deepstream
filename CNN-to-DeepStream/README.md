@@ -1,73 +1,60 @@
-# Deepstream-Yolo
-
-YOLO on deepstream-6.1-ubuntu20.04
-
-![output3](https://user-images.githubusercontent.com/33729709/210167948-382731f2-6905-44ca-aaf9-d35ae9d099a0.gif)
-
-
+# Custom CNN to DeepStream in Easy 3 steps
 
 ___
 ___
 
-<br>
-<img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" />    
-<h2>DeepStream Yolo-ONNX</h2>
+### step 1 : CNN model
+___
 
 
-![output3](https://user-images.githubusercontent.com/33729709/215125653-1896777e-0c62-46c5-b901-2d3ac4127d86.gif)
+##### here for instance im using UTKFace dataset for age or gender classifications using CNN model.
 
-@ https://github.com/bharath5673/Deepstream/tree/main/DeepStream-Yolo-onnx
+UTKFace dataset is a large-scale face dataset with long age span (range from 0 to 116 years old). The dataset consists of over 20,000 face images with annotations of age, gender, and ethnicity. The images cover large variation in pose, facial expression, illumination, occlusion, resolution, etc. This dataset could be used on a variety of tasks, e.g., face detection, age estimation, age progression/regression, landmark localization, etc. 
 
-<br>
+
+##### load utkface images and train accordingly that have used in notebook
 
 ___
-___
-<br>
-<img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" />    
-<h2>DeepStream MultiModel</h2>
 
-![output3](https://user-images.githubusercontent.com/33729709/210167600-6a677a62-40ee-4afa-b484-d0d56e78e230.gif)
-
-
-@ https://github.com/bharath5673/Deepstream/tree/main/DeepStream-MultiModel
-
-<br>
+### step 2 : Model Migration
 
 ___
-___
-<br>
-<img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" />    
-<h2>ROI based counts on deepstream</h2>
 
+##### after model training is done convert that weights file from keras to onnx using convert_2_onnx.py
 
-![output](https://user-images.githubusercontent.com/33729709/211142186-a9ecd225-4f90-4310-91df-862e243f8833.gif)
+```
+### venv recommanded
 
-@ https://github.com/bharath5673/Deepstream/tree/main/DeepStream-Python
-<br>
+pip install -r convert_2_onnx_requriements.txt
 
-___
-___
-<br>
-<img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" />    
-<h2>Trajectory tracking on deepstream</h2>
+python3 convert_2_onnx.py  ### here im using for gender , and u can change accordingly
 
-
-
-![output3](https://user-images.githubusercontent.com/33729709/215127343-b540a737-d3bc-4fe8-8835-050497d325a3.gif)
-
-
-@ https://github.com/bharath5673/Deepstream/tree/main/DeepStream-Python
-<br>
+```
 
 ___
-___
-<br>
-<h2>Easy steps installation</h2> @
-https://gist.github.com/bharath5673/800a18cc7474ce9c22fda6deaaa98354
-</br>
+
+
+### step 3 : Deepstream config
 
 ___
-___
-<br>
-<h2> for YOLO Deepstream Configrations </h2>
-@https://github.com/marcoslucianops/DeepStream-Yolo
+
+##### now u can configure those onnx file as pgie or sgie for ur DeepStream applications
+
+```
+##sgie1
+....
+[property]
+enable=1
+gpu-id=0
+
+onnx-file=weights/gender_cnn/gender.onnx
+labelfile-path=weights/gender_cnn/labels.txt
+
+network-input-order=1
+infer-dims= 3;224;224
+batch-size=1
+....
+
+```
+for reference : dstest2_sgie1_config.txt <a href="https://github.com/bharath5673/Deepstream/blob/main/DeepStream-MultiModel/face/dstest2_sgie1_config.txt">Link to dstest2_sgie1_config.txt</a>
+
