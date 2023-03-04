@@ -71,3 +71,22 @@ ___
 <br>
 <h2> for YOLO Deepstream Configrations </h2>
 @https://github.com/marcoslucianops/DeepStream-Yolo
+
+
+___
+___
+
+<br>
+<img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" />    
+<h2> CNN to DeepStream in simple 3 steps </h2>
+
+
+![5ef98519-07bb-4983-81e1-81a3debfdd462](https://user-images.githubusercontent.com/33729709/222878115-7e34dbe3-ac50-4388-9430-e82db1e31a37.jpeg)
+
+
+@ https://github.com/bharath5673/Deepstream/tree/main/CNN-to-DeepStream
+
+<br>
+
+___
+___
