@@ -9,7 +9,7 @@ ___
 
 ##### here for instance im using UTKFace dataset for age or gender classifications using CNN model.
 
-UTKFace dataset is a large-scale face dataset with long age span (range from 0 to 116 years old). The dataset consists of over 20,000 face images with annotations of age, gender, and ethnicity. The images cover large variation in pose, facial expression, illumination, occlusion, resolution, etc. This dataset could be used on a variety of tasks, e.g., face detection, age estimation, age progression/regression, landmark localization, etc. 
+<a href="https://susanqq.github.io/UTKFace/">UTKFace</a> dataset is a large-scale face dataset with long age span (range from 0 to 116 years old). The dataset consists of over 20,000 face images with annotations of age, gender, and ethnicity. The images cover large variation in pose, facial expression, illumination, occlusion, resolution, etc. This dataset could be used on a variety of tasks, e.g., face detection, age estimation, age progression/regression, landmark localization, etc. 
 
 
 ##### load utkface images and train accordingly that have used in <a href="https://github.com/bharath5673/Deepstream/blob/main/CNN-to-DeepStream/custom_CNN_utkTest.ipynb">this notebook</a>
