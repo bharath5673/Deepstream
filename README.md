@@ -79,7 +79,7 @@ ___
 <br>
 
 <img src="https://user-images.githubusercontent.com/33729709/222878237-fb9e902e-79ef-4393-9bb6-e1bc9b3a77b3.gif" width="120" height="40" />    
-<h2> CNN to DeepStream in simple 3 steps </h2>
+<h2>Custom CNN to DeepStream in simple 3 steps </h2>
 
 
 ![5ef98519-07bb-4983-81e1-81a3debfdd462](https://user-images.githubusercontent.com/33729709/222878115-7e34dbe3-ac50-4388-9430-e82db1e31a37.jpeg)
