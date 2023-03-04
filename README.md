@@ -84,7 +84,7 @@ ___
 ![5ef98519-07bb-4983-81e1-81a3debfdd462](https://user-images.githubusercontent.com/33729709/222878115-7e34dbe3-ac50-4388-9430-e82db1e31a37.jpeg)
 
 
-@ https://github.com/bharath5673/Deepstream/tree/main/CNN-to-DeepStream
+START @ https://github.com/bharath5673/Deepstream/tree/main/CNN-to-DeepStream
 
 <br>
 
