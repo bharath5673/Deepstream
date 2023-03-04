@@ -77,7 +77,8 @@ ___
 ___
 
 <br>
-<img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" />    
+
+<img src="https://user-images.githubusercontent.com/33729709/222878237-fb9e902e-79ef-4393-9bb6-e1bc9b3a77b3.gif" width="120" height="40" />    
 <h2> CNN to DeepStream in simple 3 steps </h2>
 
 
