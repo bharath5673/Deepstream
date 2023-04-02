@@ -26,7 +26,7 @@ ___
 <img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" />    
 <h2>DeepStream MultiModel</h2>
 
-![output3](https://user-images.githubusercontent.com/33729709/210167600-6a677a62-40ee-4afa-b484-d0d56e78e230.gif)
+![output3](https://user-images.githubusercontent.com/33729709/210167600-6a677a62-40ee-4afa-b484-d0d56e78e230.gif2)
 
 
 @ https://github.com/bharath5673/Deepstream/tree/main/DeepStream-MultiModel
