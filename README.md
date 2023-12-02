@@ -1,4 +1,4 @@
-# Deepstream-Yolo
+# Deepstream
 
 1. Make sure that you install Deepstream 6.3
 
