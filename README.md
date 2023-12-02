@@ -1,5 +1,17 @@
 # Deepstream-Yolo
 
+1. Make sure that you install Deepstream 6.3
+
+2. Clone the repository recursively:
+
+`git clone --recurse-submodules  https://github.com/bharath5673/Deepstream.git `
+
+If you already cloned and forgot to use `--recurse-submodules` you can run `git submodule update --init`
+
+3. follow the instructions as shown in the repos..
+
+
+
 YOLO on deepstream-6.1-ubuntu20.04
 
 ![output3](https://user-images.githubusercontent.com/33729709/210167948-382731f2-6905-44ca-aaf9-d35ae9d099a0.gif)
