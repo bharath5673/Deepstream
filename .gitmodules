@@ -1,0 +1,15 @@
+[submodule "DeepStream-Configs/DeepStream-Yolo"]
+	path = DeepStream-Configs/DeepStream-Yolo
+	url = https://github.com/marcoslucianops/DeepStream-Yolo.git
+
+[submodule "DeepStream-Configs/DeepStream-Yolo-Face"]
+	path = DeepStream-Configs/DeepStream-Yolo-Face
+	url = https://github.com/marcoslucianops/DeepStream-Yolo-Face.git
+
+[submodule "DeepStream-Configs/DeepStream-Yolo-Pose"]
+	path = DeepStream-Configs/DeepStream-Yolo-Pose
+	url = https://github.com/marcoslucianops/DeepStream-Yolo-Pose.git
+	
+[submodule "DeepStream-Configs/DeepStream-Yolo-Seg"]
+	path = DeepStream-Configs/DeepStream-Yolo-Seg
+	url = https://github.com/marcoslucianops/DeepStream-Yolo-Seg.git
