@@ -418,13 +418,13 @@ def main(args):
     streammux.set_property('batched-push-timeout', 2000000)
 
     #Set properties of pgie
-    pgie.set_property('config-file-path', "config_infer_primary_yoloV5.txt")
-    # pgie.set_property('config-file-path', "config_infer_primary_yoloV7.txt")
+    pgie.set_property('config-file-path', "../DeepStream-Configs/DeepStream-Yolo/config_infer_primary_yoloV5.txt")
+    # pgie.set_property('config-file-path', "../DeepStream-Configs/DeepStream-Yolo/config_infer_primary_yoloV8.txt")
 
 
     #Set properties of tracker
     config = configparser.ConfigParser()
-    config.read('tracker_config.txt')    
+    config.read('../DeepStream-Configs/test/tracker_config.txt')    
     config.sections()
 
     for key in config['tracker']:
@@ -445,7 +445,7 @@ def main(args):
             tracker.set_property('ll-config-file', tracker_ll_config_file)
         if key == 'enable-batch-process' :
             tracker_enable_batch_process = config.getint('tracker', key)
-            tracker.set_property('enable_batch_process', tracker_enable_batch_process)
+            # tracker.set_property('enable_batch_process', tracker_enable_batch_process)
         if key == 'enable-past-frame' :
             tracker_enable_past_frame = config.getint('tracker', key)
             tracker.set_property('enable_past_frame', tracker_enable_past_frame)

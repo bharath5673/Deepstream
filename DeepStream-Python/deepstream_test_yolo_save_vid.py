@@ -228,8 +228,10 @@ def main(args):
     streammux.set_property('height', 720)
     streammux.set_property('batch-size', 1)
     streammux.set_property('batched-push-timeout', 4000000)
-    # pgie.set_property('config-file-path', "dstest1_pgie_config.txt")
-    pgie.set_property('config-file-path', "config_infer_primary_yoloV5.txt")
+
+    #Set properties of pgie
+    pgie.set_property('config-file-path', "../DeepStream-Configs/DeepStream-Yolo/config_infer_primary_yoloV5.txt")
+    # pgie.set_property('config-file-path', "../DeepStream-Configs/DeepStream-Yolo/config_infer_primary_yoloV8.txt")
 
     print("Adding elements to Pipeline \n")
     pipeline.add(source)

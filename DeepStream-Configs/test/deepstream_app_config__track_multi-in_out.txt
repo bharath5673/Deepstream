@@ -1,0 +1,136 @@
+
+  
+[application]
+enable-perf-measurement=1
+perf-measurement-interval-sec=5
+
+[tiled-display]
+enable=1
+rows=2
+columns=2
+width=1280
+height=720
+#width=2560
+#height=1440
+gpu-id=0
+nvbuf-memory-type=0
+
+[source0]
+enable=1
+#Type - 1=CameraV4L2 2=URI 3=MultiURI
+type=3
+uri=file:///home/bharath5673/Downloads/testing/vids/test_%d.h264
+num-sources=2
+gpu-id=0
+cudadec-memtype=0
+
+[sink0]
+enable=1
+#Type - 1=FakeSink 2=EglSink 3=File
+type=1
+sync=0
+source-id=0
+gpu-id=0
+
+
+[sink1]
+enable=1
+type=3
+#1=mp4 2=mkv
+container=1
+#1=h264 2=h265 3=mpeg4
+codec=1
+#encoder type 0=Hardware 1=Software
+enc-type=0
+sync=0
+bitrate=2000000
+#H264 Profile - 0=Baseline 2=Main 4=High
+#H265 Profile - 0=Main 1=Main10
+profile=0
+output-file=out.mp4
+source-id=0
+
+[sink2]
+enable=0
+#Type - 1=FakeSink 2=EglSink 3=File 4=RTSPStreaming 5=Overlay
+type=4
+#1=h264 2=h265
+codec=1
+#encoder type 0=Hardware 1=Software
+enc-type=0
+sync=0
+bitrate=4000000
+#H264 Profile - 0=Baseline 2=Main 4=High
+#H265 Profile - 0=Main 1=Main10
+profile=0
+#set below properties in case of RTSPStreaming
+rtsp-port=8554
+udp-port=5400
+
+
+[osd]
+enable=1
+display-mask=1
+gpu-id=0
+border-width=2
+text-size=10
+text-color=1;1;1;1;
+text-bg-color=0.15;0.15;0.15;1
+font=Serif
+show-clock=0
+clock-x-offset=800
+clock-y-offset=820
+clock-text-size=12
+clock-color=1;0;0;0
+nvbuf-memory-type=0
+#osd-mode 0: Dont display any lines, rois and text
+#         1: Display only lines, rois and static text i.e. labels
+#         2: Display all info from 1 plus information about counts
+osd-mode=2
+#Set OSD font size that has to be displayed
+display-font-size=12
+
+
+[streammux]
+gpu-id=0
+live-source=0
+batch-size=1
+batched-push-timeout=40000
+width=1920
+height=1080
+enable-padding=0
+nvbuf-memory-type=0
+
+[tracker]
+enable=1
+tracker-width=640
+tracker-height=640
+ll-lib-file=/opt/nvidia/deepstream/deepstream/lib/libnvds_nvmultiobjecttracker.so
+#ll-config-file=/opt/nvidia/deepstream/deepstream/samples/configs/deepstream-app/config_tracker_IOU.yml
+#ll-config-file=/opt/nvidia/deepstream/deepstream/samples/configs/deepstream-app/config_tracker_NvDCF_max_perf.yml
+#ll-config-file=/opt/nvidia/deepstream/deepstream/samples/configs/deepstream-app/config_tracker_NvDCF_perf.yml
+#ll-config-file=/opt/nvidia/deepstream/deepstream/samples/configs/deepstream-app/config_tracker_NvDCF_accuracy.yml
+gpu-id=0
+enable-batch-process=1
+display-tracking-id=1
+
+[primary-gie]
+enable=1
+gpu-id=0
+
+##skip frames
+#interval=2
+#drop-frame-interval=10
+
+gie-unique-id=1
+nvbuf-memory-type=1
+
+#config-file=../DeepStream-Yolo/config_infer_primary_yoloV5.txt
+#config-file=../DeepStream-Yolo/config_infer_primary_yoloV7.txt
+config-file=../DeepStream-Yolo/config_infer_primary_yoloV8.txt
+#config-file=../DeepStream-Yolo-Seg/config_infer_primary_yoloV5_seg.txt
+#config-file=../DeepStream-Yolo-Seg/config_infer_primary_yoloV7_seg.txt
+
+
+[tests]
+file-loop=0
