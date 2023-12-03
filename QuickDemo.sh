@@ -1,7 +1,7 @@
 
 # git clone --recurse-submodules  https://github.com/bharath5673/Deepstream.git
 
-cd Deepstream
+# cd Deepstream
 cd DeepStream-Configs
 
 cd DeepStream-Yolo
