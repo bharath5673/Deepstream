@@ -66,7 +66,7 @@ cd DeepStream-Configs/DeepStream-Yolo-Seg
 # sed -i 's/config_infer_primary\.txt/config_infer_primary_yoloV8-seg\.txt/g' deepstream_app_config.txt
 deepstream-app -c deepstream_app_config.txt
 cd ..
-cd ..
+#cd ..
 
 
 echo '\n\nQuick Fininshed..\n\n'
