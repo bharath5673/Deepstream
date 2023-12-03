@@ -91,7 +91,7 @@ ___
 
 <br>
 <img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" />   
-<h2>Deepstream multistreams, tiled, multimodesl, customizations and extra configs </h2>
+<h2>Deepstream multistreams, tiled, multimodels, customizations and extra configs </h2>
 @ https://github.com/bharath5673/Deepstream/tree/main/DeepStream-Configs/test
 
 ___
