@@ -99,7 +99,7 @@ ___
 
 <br>
 <img src="https://user-images.githubusercontent.com/33729709/222878237-fb9e902e-79ef-4393-9bb6-e1bc9b3a77b3.gif" width="120" height="40" />    
-<h2>Deepstream Multimodel python</h2>
+<h2>Deepstream Multimodels python</h2>
 
 ![output3](https://user-images.githubusercontent.com/33729709/210167948-382731f2-6905-44ca-aaf9-d35ae9d099a0.gif)
 
