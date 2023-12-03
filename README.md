@@ -77,6 +77,35 @@ START @ https://github.com/bharath5673/Deepstream/tree/main/CNN-to-DeepStream
 ___
 ___
 
+<br>
+<img src="https://user-images.githubusercontent.com/33729709/222878237-fb9e902e-79ef-4393-9bb6-e1bc9b3a77b3.gif" width="120" height="40" />    
+<h2>Deepstream ONNXified Quick DEMO</h2>
+
+```
+cd Deepstream
+sh QuickDemo.sh
+
+```
+___
+___
+
+<br>
+<img src="https://user-images.githubusercontent.com/33729709/222878237-fb9e902e-79ef-4393-9bb6-e1bc9b3a77b3.gif" width="120" height="40" />    
+<h2>Deepstream multistreams and extra configs </h2>
+@ https://github.com/bharath5673/Deepstream/tree/main/DeepStream-Configs/test
+
+___
+___
+
+<br>
+<img src="https://user-images.githubusercontent.com/33729709/222878237-fb9e902e-79ef-4393-9bb6-e1bc9b3a77b3.gif" width="120" height="40" />    
+<h2>Deepstream Multimodel python</h2>
+
+![output3](https://user-images.githubusercontent.com/33729709/210167948-382731f2-6905-44ca-aaf9-d35ae9d099a0.gif)
+
+@https://github.com/bharath5673/Deepstream/blob/main/DeepStream-Python/deepstream_test_yolo_track_multimodel.py
+___
+___
 
 <br>
 <h2>Easy steps installation</h2> @
@@ -86,14 +115,21 @@ https://gist.github.com/bharath5673/800a18cc7474ce9c22fda6deaaa98354
 ___
 ___
 
+## Acknowledgements
 
-<br>
-<img src="https://user-images.githubusercontent.com/33729709/222878237-fb9e902e-79ef-4393-9bb6-e1bc9b3a77b3.gif" width="120" height="40" />    
-<h2>Deepstream ONNXified Quick DEMO</h2>
+<details><summary> <b>Expand</b> </summary>
 
-```
-sh QuickDemo.sh
+* [https://github.com/marcoslucianops/DeepStream-Yolo](https://github.com/marcoslucianops/DeepStream-Yolo)
+* [https://github.com/AlexeyAB/darknet](https://github.com/AlexeyAB/darknet)
+* [https://github.com/WongKinYiu/yolor](https://github.com/WongKinYiu/yolor)
+* [https://github.com/WongKinYiu/PyTorch_YOLOv4](https://github.com/WongKinYiu/PyTorch_YOLOv4)
+* [https://github.com/WongKinYiu/ScaledYOLOv4](https://github.com/WongKinYiu/ScaledYOLOv4)
+* [https://github.com/Megvii-BaseDetection/YOLOX](https://github.com/Megvii-BaseDetection/YOLOX)
+* [https://github.com/ultralytics/yolov3](https://github.com/ultralytics/yolov3)
+* [https://github.com/ultralytics/yolov5](https://github.com/ultralytics/yolov5)
+* [https://github.com/DingXiaoH/RepVGG](https://github.com/DingXiaoH/RepVGG)
+* [https://github.com/JUGGHM/OREPA_CVPR2022](https://github.com/JUGGHM/OREPA_CVPR2022)
+* [https://github.com/TexasInstruments/edgeai-yolov5/tree/yolo-pose](https://github.com/TexasInstruments/edgeai-yolov5/tree/yolo-pose)
+* [https://github.com/ultralytics/ultralytics](https://github.com/ultralytics/ultralytics)
 
-```
-___
-___
+</details>
