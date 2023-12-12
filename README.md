@@ -13,7 +13,7 @@
 3. follow the instructions as shown in the repos..
 
 
-![output3](https://user-images.githubusercontent.com/33729709/210167948-382731f2-6905-44ca-aaf9-d35ae9d099a0.gif)
+![output3](demo.gif)
 
 
 
