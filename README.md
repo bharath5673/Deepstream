@@ -86,28 +86,38 @@ Runs instantly with DS8.0-ready configs:
 
 ---
 
+Here’s a **cleaned-up and polished version** of your section:
+
+---
+
 # 🎯 **What This Repo Provides**
-
-### ✔️ **DeepStream 8.0 Templates (Production Ready)**
-
-• Multi-model pipelines
-• YOLO detection + pose
-• Trajectory tracking
-• ROI counting
-• Multi-stream tiled processing
-• Triton-ready configs
-• Python & C++ versions
-
-### ✔️ **Fully-Optimized & Low-Code**
-
-Minimal code → Maximum performance.
-Just edit config files & run.
 
 ### ✔️ **Docker-Ready**
 
-Build + run your inference stack inside an isolated DS8.0 environment.
+Run your inference stack inside a fully isolated **DeepStream 8.0 Docker environment**.
+Just **clone the prebuilt YOLO DS Docker image** and start running demos instantly.
 
 ---
+
+### ✔️ **DeepStream 8.0 Templates (Production Ready)**
+
+* Multi-model pipelines
+* YOLO detection & pose estimation
+* Trajectory tracking
+* ROI-based counting
+* Multi-stream tiled processing
+* Triton-ready configurations
+* Python & C++ implementations
+
+---
+
+### ✔️ **Fully-Optimized & Low-Code**
+
+Minimal coding required — **just edit config files and run**.
+Get **maximum performance** with minimal effort.
+
+---
+
 
 # 🌟 **Showcase Gallery**
 
