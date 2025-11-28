@@ -1,309 +1,283 @@
 #!/usr/bin/env python3
 
 ################################################################################
-# Copyright (c) 2020, NVIDIA CORPORATION. All rights reserved.
+# SPDX-FileCopyrightText: Copyright (c) 2019-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
 #
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions:
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
+# http://www.apache.org/licenses/LICENSE-2.0
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-# DEALINGS IN THE SOFTWARE.
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 ################################################################################
 
 import sys
-sys.path.append('../')
+sys.path.append('/root/deepstream_python_apps/apps/')
+import os
 import gi
 gi.require_version('Gst', '1.0')
-from gi.repository import GObject, Gst
-from common.is_aarch_64 import is_aarch64
+from gi.repository import GLib, Gst
+from common.platform_info import PlatformInfo
 from common.bus_call import bus_call
-
 import pyds
-
-PGIE_CLASS_ID_VEHICLE = 2
-PGIE_CLASS_ID_BICYCLE = 1
-PGIE_CLASS_ID_PERSON = 0
-PGIE_CLASS_ID_ROADSIGN = 3
+import configparser
+import numpy as np
+import datetime
 
 
-def osd_sink_pad_buffer_probe(pad,info,u_data):
-    frame_number=0
-    #Intiallizing object counter with 0.
-    obj_counter = {
-        PGIE_CLASS_ID_VEHICLE:0,
-        PGIE_CLASS_ID_PERSON:0,
-        PGIE_CLASS_ID_BICYCLE:0,
-        PGIE_CLASS_ID_ROADSIGN:0
-    }
-    num_rects=0
+# Load COCO class names (optional)
+COCO_CLASSES = []
+with open("/root/DeepStream-Yolo/labels.txt", "r") as f:  # File should contain one class per line
+    COCO_CLASSES = [line.strip() for line in f.readlines()]
+# Constants
+MUXER_BATCH_TIMEOUT_USEC = 33000
 
+
+def osd_sink_pad_buffer_probe(pad, info, u_data):
     gst_buffer = info.get_buffer()
     if not gst_buffer:
-        print("Unable to get GstBuffer ")
-        return
+        return Gst.PadProbeReturn.OK
 
-    # Retrieve batch metadata from the gst_buffer
-    # Note that pyds.gst_buffer_get_nvds_batch_meta() expects the
-    # C address of gst_buffer as input, which is obtained with hash(gst_buffer)
     batch_meta = pyds.gst_buffer_get_nvds_batch_meta(hash(gst_buffer))
+    if not batch_meta:
+        return Gst.PadProbeReturn.OK
+
     l_frame = batch_meta.frame_meta_list
-    while l_frame is not None:
-        try:
-            # Note that l_frame.data needs a cast to pyds.NvDsFrameMeta
-            # The casting is done by pyds.glist_get_nvds_frame_meta()
-            # The casting also keeps ownership of the underlying memory
-            # in the C code, so the Python garbage collector will leave
-            # it alone.
-            #frame_meta = pyds.glist_get_nvds_frame_meta(l_frame.data)
-            frame_meta = pyds.NvDsFrameMeta.cast(l_frame.data)
-        except StopIteration:
-            break
+    while l_frame:
+        frame_meta = pyds.NvDsFrameMeta.cast(l_frame.data)
+        frame_number = frame_meta.frame_num
 
-        frame_number=frame_meta.frame_num
-        num_rects = frame_meta.num_obj_meta
-        l_obj=frame_meta.obj_meta_list
-        while l_obj is not None:
-            try:
-                # Casting l_obj.data to pyds.NvDsObjectMeta
-                #obj_meta=pyds.glist_get_nvds_object_meta(l_obj.data)
-                obj_meta=pyds.NvDsObjectMeta.cast(l_obj.data)
-            except StopIteration:
-                break
-            try:
-                obj_counter[obj_meta.class_id] += 1
-            except:
-                pass
-            try: 
-                l_obj=l_obj.next
-            except StopIteration:
-                break
+        l_obj = frame_meta.obj_meta_list
+        while l_obj:
+            obj_meta = pyds.NvDsObjectMeta.cast(l_obj.data)
 
-        # Acquiring a display meta object. The memory ownership remains in
-        # the C code so downstream plugins can still access it. Otherwise
-        # the garbage collector will claim it when this probe function exits.
-        display_meta=pyds.nvds_acquire_display_meta_from_pool(batch_meta)
-        display_meta.num_labels = 1
-        py_nvosd_text_params = display_meta.text_params[0]
-        # Setting display text to be shown on screen
-        # Note that the pyds module allocates a buffer for the string, and the
-        # memory will not be claimed by the garbage collector.
-        # Reading the display_text field here will return the C address of the
-        # allocated string. Use pyds.get_string() to get the string content.
-        py_nvosd_text_params.display_text = "Frame Number={} Number of Objects={} Vehicle_count={} Person_count={}".format(frame_number, num_rects, obj_counter[PGIE_CLASS_ID_VEHICLE], obj_counter[PGIE_CLASS_ID_PERSON])
+            class_id = obj_meta.class_id
+            tracker_id = obj_meta.object_id
+            rect = obj_meta.rect_params
 
-        # Now set the offsets where the string should appear
-        py_nvosd_text_params.x_offset = 10
-        py_nvosd_text_params.y_offset = 12
+            # bottom-center of bbox
+            x = int(rect.left + rect.width / 2)
+            y = int(rect.top + rect.height)
 
-        # Font , font-color and font-size
-        py_nvosd_text_params.font_params.font_name = "Serif"
-        py_nvosd_text_params.font_params.font_size = 10
-        # set(red, green, blue, alpha); set to White
-        py_nvosd_text_params.font_params.font_color.set(1.0, 1.0, 1.0, 1.0)
-
-        # Text background color
-        py_nvosd_text_params.set_bg_clr = 1
-        # set(red, green, blue, alpha); set to Black
-        py_nvosd_text_params.text_bg_clr.set(0.0, 0.0, 0.0, 1.0)
-        # Using pyds.get_string() to get display_text as string
-        print(pyds.get_string(py_nvosd_text_params.display_text))
-        pyds.nvds_add_display_meta_to_frame(frame_meta, display_meta)
-        try:
-            l_frame=l_frame.next
-        except StopIteration:
-            break
+            print(f"Frame {frame_number} | Class {class_id} | ObjID {tracker_id} | BBox=({x},{y})")
+            sys.stdout.flush()
             
-    return Gst.PadProbeReturn.OK    
+            l_obj = l_obj.next
+        l_frame = l_frame.next
 
+    return Gst.PadProbeReturn.OK
 
 def main(args):
-    # Check input arguments
-    if len(args) != 2:
-        sys.stderr.write("usage: %s <media file or uri>\n" % args[0])
-        sys.exit(1)
+    if len(args) < 2:
+        sys.stderr.write("Usage: %s <input_file.h264> [--display]\n" % args[0])
+        return 1
 
-    # Standard GStreamer initialization
-    GObject.threads_init()
+    input_file = args[1]
+    enable_display = ("--display" in args)
+
     Gst.init(None)
-
-    # Create gstreamer elements
-    # Create Pipeline element that will form a connection of other elements
-    print("Creating Pipeline \n ")
-    pipeline = Gst.Pipeline()
-
+    pipeline = Gst.Pipeline.new("deepstream-pipeline")
     if not pipeline:
         sys.stderr.write(" Unable to create Pipeline \n")
+        return 1
 
-    # Source element for reading from the file
-    print("Creating Source \n ")
-    source = Gst.ElementFactory.make("filesrc", "file-source")
+    # Use uridecodebin for universal input handling
+    source = Gst.ElementFactory.make("uridecodebin", "uri-source")
     if not source:
-        sys.stderr.write(" Unable to create Source \n")
+        sys.stderr.write(" Unable to create uridecodebin source \n")
+        return 1
 
-    # Since the data format in the input file is elementary h264 stream,
-    # we need a h264parser
-    print("Creating H264Parser \n")
-    h264parser = Gst.ElementFactory.make("h264parse", "h264-parser")
-    if not h264parser:
-        sys.stderr.write(" Unable to create h264 parser \n")
-
-    # Use nvdec_h264 for hardware accelerated decode on GPU
-    print("Creating Decoder \n")
-    decoder = Gst.ElementFactory.make("nvv4l2decoder", "nvv4l2-decoder")
-    if not decoder:
-        sys.stderr.write(" Unable to create Nvv4l2 Decoder \n")
-
-    # Create nvstreammux instance to form batches from one or more sources.
-    streammux = Gst.ElementFactory.make("nvstreammux", "Stream-muxer")
+    streammux = Gst.ElementFactory.make("nvstreammux", "stream-muxer")
     if not streammux:
-        sys.stderr.write(" Unable to create NvStreamMux \n")
+        sys.stderr.write(" Unable to create streammux \n")
+        return 1
 
-    # Use nvinfer to run inferencing on decoder's output,
-    # behaviour of inferencing is set through config file
     pgie = Gst.ElementFactory.make("nvinfer", "primary-inference")
     if not pgie:
         sys.stderr.write(" Unable to create pgie \n")
+        return 1
 
-    # Use convertor to convert from NV12 to RGBA as required by nvosd
+    tracker = Gst.ElementFactory.make("nvtracker", "tracker")
+    if not tracker:
+        sys.stderr.write(" Unable to create tracker \n")
+        return 1
+
     nvvidconv = Gst.ElementFactory.make("nvvideoconvert", "convertor")
     if not nvvidconv:
         sys.stderr.write(" Unable to create nvvidconv \n")
+        return 1
 
-    # Create OSD to draw on the converted RGBA buffer
     nvosd = Gst.ElementFactory.make("nvdsosd", "onscreendisplay")
-
     if not nvosd:
         sys.stderr.write(" Unable to create nvosd \n")
+        return 1
 
     nvvidconv2 = Gst.ElementFactory.make("nvvideoconvert", "convertor2")
     if not nvvidconv2:
         sys.stderr.write(" Unable to create nvvidconv2 \n")
+        return 1
 
-    capsfilter = Gst.ElementFactory.make("capsfilter", "capsfilter")
-    if not capsfilter:
-        sys.stderr.write(" Unable to create capsfilter \n")
-
-    caps = Gst.Caps.from_string("video/x-raw, format=I420")
-    capsfilter.set_property("caps", caps)
-
-    encoder = Gst.ElementFactory.make("avenc_mpeg4", "encoder")
+    # Use NVIDIA hardware encoder with fallback
+    encoder = Gst.ElementFactory.make("nvv4l2h264enc", "encoder")
     if not encoder:
-        sys.stderr.write(" Unable to create encoder \n")
-    encoder.set_property("bitrate", 2000000)
+        encoder = Gst.ElementFactory.make("x264enc", "encoder")
+        if not encoder:
+            sys.stderr.write(" Unable to create encoder \n")
+            return 1
 
-    print("Creating Code Parser \n")
-    codeparser = Gst.ElementFactory.make("mpeg4videoparse", "mpeg4-parser")
-    if not codeparser:
-        sys.stderr.write(" Unable to create code parser \n")
+    # Add h264parse after encoder for proper MP4 muxing
+    h264parse2 = Gst.ElementFactory.make("h264parse", "h264-parser2")
+    if not h264parse2:
+        sys.stderr.write(" Unable to create h264parse2 \n")
+        return 1
 
-    print("Creating Container \n")
-    container = Gst.ElementFactory.make("qtmux", "qtmux")
-    if not container:
-        sys.stderr.write(" Unable to create code parser \n")
+    muxer = Gst.ElementFactory.make("qtmux", "mp4-muxer")
+    if not muxer:
+        sys.stderr.write(" Unable to create muxer \n")
+        return 1
 
-    print("Creating Sink \n")
-    sink = Gst.ElementFactory.make("filesink", "filesink")
+    sink = Gst.ElementFactory.make("filesink", "file-sink")
     if not sink:
-        sys.stderr.write(" Unable to create file sink \n")
+        sys.stderr.write(" Unable to create sink \n")
+        return 1
 
-    sink.set_property("location", "./out.mp4")
-    sink.set_property("sync", 1)
-    sink.set_property("async", 0)
+    tee = Gst.ElementFactory.make("tee", "tee")
+    if not tee:
+        sys.stderr.write(" Unable to create tee \n")
+        return 1
 
-    print("Playing file %s " %args[1])
-    source.set_property('location', args[1])
-    streammux.set_property('width', 1280)
-    streammux.set_property('height', 720)
-    streammux.set_property('batch-size', 1)
-    streammux.set_property('batched-push-timeout', 4000000)
+    queue1 = Gst.ElementFactory.make("queue", "queue1")
+    if not queue1:
+        sys.stderr.write(" Unable to create queue1 \n")
+        return 1
 
-    #Set properties of pgie
-    pgie.set_property('config-file-path', "../DeepStream-Configs/DeepStream-Yolo/config_infer_primary_yoloV5.txt")
-    # pgie.set_property('config-file-path', "../DeepStream-Configs/DeepStream-Yolo/config_infer_primary_yoloV8.txt")
+    # Display branch (only if enabled)
+    display_sink = None
+    queue2 = None
+    if enable_display:
+        queue2 = Gst.ElementFactory.make("queue", "queue2")
+        if not queue2:
+            sys.stderr.write(" Unable to create queue2 \n")
+            return 1
+        display_sink = Gst.ElementFactory.make("nveglglessink", "display-sink")
+        if not display_sink:
+            sys.stderr.write(" Unable to create display sink \n")
+            return 1
 
-    print("Adding elements to Pipeline \n")
-    pipeline.add(source)
-    pipeline.add(h264parser)
-    pipeline.add(decoder)
-    pipeline.add(streammux)
-    pipeline.add(pgie)
-    pipeline.add(nvvidconv)
-    pipeline.add(nvvidconv2)
-    pipeline.add(encoder)
-    pipeline.add(capsfilter)
-    pipeline.add(codeparser)
-    pipeline.add(container)
-    pipeline.add(nvosd)
-    pipeline.add(sink)
+    
+    # Convert file path to URI format
+    if input_file.startswith("file://"):
+        uri = input_file
+    else:
+        uri = "file://" + os.path.abspath(input_file)
+    
+    source.set_property("uri", uri)
+    source.set_property("buffer-duration", 0)
+    source.set_property("buffer-size", 0)
 
-    # we link the elements together
-    # file-source -> h264-parser -> nvh264-decoder ->
-    # nvinfer -> nvvidconv -> nvosd -> video-renderer
-    print("Linking elements in the Pipeline \n")
-    source.link(h264parser)
-    h264parser.link(decoder)
+    streammux.set_property("width", 768)
+    streammux.set_property("height", 432)
+    streammux.set_property("batch-size", 1)
+    streammux.set_property("batched-push-timeout", 4000000)  # MUXER_BATCH_TIMEOUT_USEC
+    streammux.set_property("live-source", 0)
 
-    sinkpad = streammux.get_request_pad("sink_0")
-    if not sinkpad:
-        sys.stderr.write(" Unable to get the sink pad of streammux \n")
-    srcpad = decoder.get_static_pad("src")
-    if not srcpad:
-        sys.stderr.write(" Unable to get source pad of decoder \n")
-    srcpad.link(sinkpad)
+    pgie.set_property("config-file-path", "/root/DeepStream-Configs/config_infer_primary_yoloV8.txt")
+
+
+    encoder.set_property("bitrate", 2000000)
+    # Create output directory and better file naming
+    os.makedirs("./outputs", exist_ok=True)
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    sink.set_property("location", f"/root/outputs/deepstream_test_yolo_save_vid_out_{timestamp}.mp4")
+    sink.set_property("sync", False)
+    sink.set_property("async", False)
+
+    if enable_display and display_sink:
+        display_sink.set_property("sync", False)
+
+
+    elems = [source, streammux, pgie, nvvidconv, nvosd, 
+             tee, queue1, nvvidconv2, encoder, h264parse2, muxer, sink]
+    
+    if enable_display and display_sink:
+        elems.extend([queue2, display_sink])
+
+    for elem in elems:
+        if elem:
+            pipeline.add(elem)
+
+
+    
+    # Link all elements except source (uridecodebin)
     streammux.link(pgie)
     pgie.link(nvvidconv)
     nvvidconv.link(nvosd)
-    nvosd.link(nvvidconv2)
-    nvvidconv2.link(capsfilter)
-    capsfilter.link(encoder)
-    encoder.link(codeparser)
+    nvosd.link(tee)
 
-    sinkpad1 = container.get_request_pad("video_0")
-    if not sinkpad1:
-        sys.stderr.write(" Unable to get the sink pad of qtmux \n")
-    srcpad1 = codeparser.get_static_pad("src")
-    if not srcpad1:
-        sys.stderr.write(" Unable to get mpeg4 parse src pad \n")
-    srcpad1.link(sinkpad1)
-    container.link(sink)
+    # Recording branch
+    tee.link(queue1)
+    queue1.link(nvvidconv2)
+    nvvidconv2.link(encoder)
+    encoder.link(h264parse2)
+    h264parse2.link(muxer)
+    muxer.link(sink)
 
-    # create an event loop and feed gstreamer bus mesages to it
-    loop = GObject.MainLoop()
+    # Display branch
+    if enable_display and display_sink:
+        tee.link(queue2)
+        queue2.link(display_sink)
+
+
+    def on_pad_added(element, pad, target_element):
+        # Only connect video pads
+        if pad.query_caps(None).to_string().startswith('video/'):
+            sinkpad = target_element.get_static_pad("sink_0")
+            if not sinkpad:
+                sinkpad = target_element.get_request_pad("sink_0")
+            pad.link(sinkpad)
+
+    source.connect("pad-added", on_pad_added, streammux)
+
+
+    osdsinkpad = nvosd.get_static_pad("sink")
+    if osdsinkpad:
+        osdsinkpad.add_probe(Gst.PadProbeType.BUFFER, osd_sink_pad_buffer_probe, 0)
+
+
+    loop = GLib.MainLoop()
     bus = pipeline.get_bus()
     bus.add_signal_watch()
-    bus.connect ("message", bus_call, loop)
+    bus.connect("message", bus_call, loop)
 
-    # Lets add probe to get informed of the meta data generated, we add probe to
-    # the sink pad of the osd element, since by that time, the buffer would have
-    # had got all the metadata.
-    osdsinkpad = nvosd.get_static_pad("sink")
-    if not osdsinkpad:
-        sys.stderr.write(" Unable to get sink pad of nvosd \n")
-
-    osdsinkpad.add_probe(Gst.PadProbeType.BUFFER, osd_sink_pad_buffer_probe, 0)
-
-    # start play back and listen to events
-    print("Starting pipeline \n")
-    pipeline.set_state(Gst.State.PLAYING)
+    print("Starting pipeline... Display:", enable_display)
+    print(f"Input: {input_file}")
+    print(f"Output: ./outputs/out_{timestamp}.mp4")
+    sys.stdout.flush()
+    
+    # Set pipeline to PLAYING state
+    ret = pipeline.set_state(Gst.State.PLAYING)
+    if ret == Gst.StateChangeReturn.FAILURE:
+        sys.stderr.write("Unable to set pipeline to PLAYING state\n")
+        return 1
+    
     try:
         loop.run()
-    except:
-        pass
-    # cleanup
-    pipeline.set_state(Gst.State.NULL)
+    except KeyboardInterrupt:
+        print("\nInterrupted by user")
+    except Exception as e:
+        print(f"Error in main loop: {e}")
+    finally:
+        pipeline.set_state(Gst.State.NULL)
+        print("Pipeline stopped")
+    
+    return 0
+
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
-

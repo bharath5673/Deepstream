@@ -1,72 +1,66 @@
+#!/bin/bash
+set -e
 
-# git clone --recurse-submodules  https://github.com/bharath5673/Deepstream.git
+# -----------------------------------
+# CONFIG
+# -----------------------------------
+export DISPLAY=:1
+xhost +
 
-# cd Deepstream
-cd DeepStream-Configs
+CONTAINER_NAME="vx-temp"
+IMAGE_NAME="bharath5673/deepstream8-yolo-python-x86:latest"
 
-cd DeepStream-Yolo
-pwd
-CUDA_VER=12.1 make -C nvdsinfer_custom_impl_Yolo
-cd ..
+PROJECT_ROOT="/home/bharath/Documents/Git/Deepstream"
 
-cd DeepStream-Yolo-Face
-pwd
-export CUDA_VER=12.1
-CUDA_VER=12.1 
-make -C nvdsinfer_custom_impl_Yolo_face
-make
-cd ..
+# Paths to copy
+COPY_PATHS=(
+    "$PROJECT_ROOT/DeepStream-Configs"
+    "$PROJECT_ROOT/weights"
+    "$PROJECT_ROOT/DeepStream-Python"
+    "./inputs"
+    "./outputs"
+    "./test_ds.py"
+)
 
-cd DeepStream-Yolo-Pose
-pwd
-export CUDA_VER=12.1
-make -C nvdsinfer_custom_impl_Yolo_pose
-make
-cd ..
+# -----------------------------------
+# REMOVE OLD CONTAINER
+# -----------------------------------
+docker rm -f $CONTAINER_NAME 2>/dev/null || true
 
-cd DeepStream-Yolo-Seg
-pwd
-CUDA_VER=12.1 make -C nvdsinfer_custom_impl_Yolo_seg
-cd ..
-echo '\n\nbuild successful\n\n'
+echo "Creating container..."
+docker create --gpus all \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -e DISPLAY=$DISPLAY \
+  --network host \
+  --privileged \
+  -w /root \
+  -v "$(pwd)/outputs:/root/outputs" \
+  --name $CONTAINER_NAME \
+  $IMAGE_NAME sleep infinity
 
+echo "Starting container..."
+docker start $CONTAINER_NAME
 
-cd ..
-ls weights
-echo '\n\nCopying weight files\n\n'
-cp -r weights/yolov8s.onnx DeepStream-Configs/DeepStream-Yolo
-cp -r weights/yolov8s-seg.onnx DeepStream-Configs/DeepStream-Yolo-Seg
-cp -r weights/yolov8n-face.onnx DeepStream-Configs/DeepStream-Yolo-Face
-cp -r weights/yolov8s-pose.onnx DeepStream-Configs/DeepStream-Yolo-Pose
+# -----------------------------------
+# COPY FILES INTO CONTAINER
+# -----------------------------------
+echo "Copying required project folders..."
+for path in "${COPY_PATHS[@]}"; do
+    docker cp "$path" "$CONTAINER_NAME:/root/"
+done
 
+# -----------------------------------
+# RUN MAIN TEST SCRIPT
+# -----------------------------------
+echo "Running test_ds.py..."
+docker exec -it $CONTAINER_NAME python3 /root/test_ds.py
 
-echo '\n\nRunning Object Detection Demo\n\n'
-cd DeepStream-Configs/DeepStream-Yolo
-sed -i 's/config_infer_primary\.txt/config_infer_primary_yoloV8\.txt/g' deepstream_app_config.txt
-deepstream-app -c deepstream_app_config.txt
-cd ..
-cd ..
+# -----------------------------------
+# CLEANUP
+# -----------------------------------
+echo "Cleaning up container..."
+docker rm -f $CONTAINER_NAME
 
-echo '\n\nRunning Face Detection Demo\n\n'
-cd DeepStream-Configs/DeepStream-Yolo-Face
-pwd
-ls
-./deepstream -s file:///opt/nvidia/deepstream/deepstream/samples/streams/sample_1080p_h264.mp4 -c config_infer_primary_yoloV8_face.txt
-cd ..
-cd ..
+sudo chown -R $USER:$USER ./outputs
 
-echo '\n\nRunning Pose Detection Demo\n\n'
-cd DeepStream-Configs/DeepStream-Yolo-Pose
-./deepstream -s file:///opt/nvidia/deepstream/deepstream/samples/streams/sample_1080p_h264.mp4 -c config_infer_primary_yoloV8_pose.txt
-cd ..
-cd ..
-
-echo '\n\nRunning Instance Segmenation Demo\n\n'
-cd DeepStream-Configs/DeepStream-Yolo-Seg
-# sed -i 's/config_infer_primary\.txt/config_infer_primary_yoloV8-seg\.txt/g' deepstream_app_config.txt
-deepstream-app -c deepstream_app_config.txt
-cd ..
-#cd ..
-
-
-echo '\n\nQuick Fininshed..\n\n'
+echo "Done!"
