@@ -1,17 +1,12 @@
----
 
-# 🌌 **DeepStream 8.0 – Ultra-Optimized AI Video Analytics Stack**
+#  <br> <img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="80" height="30" /> **DeepStream 8.0 – Ultra-Optimized AI Video Analytics Stack**
 
-### 🔖 *Exclusive Release – Fully Optimized • Low-Code • Docker-Ready*
+### 🔖 *EXCLUSIVE Release – Fully Optimized • Low-Code • Docker-Ready*
 
-
-<p align="center">
-  <img src="https://media0.giphy.com/media/J19OSJKmqCyP7Mfjt1/giphy.gif" width="120"/>
-</p>
 
 
 <p align="center">
-  <img src="Deepstream.png" width="200"/>
+  <img src="Deepstream.png" width="800"/>
 </p>
 
 
