@@ -48,13 +48,13 @@
 
 ---
 
-# ⚡ **Quick Start (3 Steps)**
+# ⚡ **Quick Start (1 Step)**
 
 **Setup your GPU + environment → Pull repo → Run QuickTest.sh**
 
 ---
 
-## 1️⃣ Install NVIDIA driver
+## Install NVIDIA driver
 
 Follow NVIDIA official quick install:
 
@@ -62,19 +62,15 @@ Follow NVIDIA official quick install:
 
 ---
 
-## 2️⃣ Clone this Repo
+## Clone this Repo and Run Quick Demo
 
 ```bash
 git clone https://github.com/bharath5673/Deepstream.git
-```
----
 
-## 3️⃣ Run Quick Demo
-
-```bash
 cd Deepstream
-sh QuickTest.sh
+bash QuickDemo.sh
 ```
+
 
 Runs instantly with DS8.0-ready configs:
 
@@ -157,7 +153,7 @@ Get **maximum performance** with minimal effort.
 
 ```bash
 cd Deepstream
-sh QuickTest.sh
+bash QuickDemo.sh
 ```
 
 ---

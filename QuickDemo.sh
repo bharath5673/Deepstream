@@ -7,10 +7,10 @@ set -e
 export DISPLAY=:1
 xhost +
 
-CONTAINER_NAME="vx-temp"
+CONTAINER_NAME="DS-temp"
 IMAGE_NAME="bharath5673/deepstream8-yolo-python-x86:latest"
 
-PROJECT_ROOT="/home/bharath/Documents/Git/Deepstream"
+PROJECT_ROOT="./"
 
 # Paths to copy
 COPY_PATHS=(
