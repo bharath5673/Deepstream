@@ -4,11 +4,9 @@
 ### 🔖 *EXCLUSIVE Release – Fully Optimized • Low-Code • Docker-Ready*
 
 
-
 <p align="center">
-  <img src="Deepstream.png" width="800"/>
+  <p align="center"><img width="70%" src="demo.gif"></p>
 </p>
-
 
 
 <p align="center">
