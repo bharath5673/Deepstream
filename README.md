@@ -129,9 +129,9 @@ Build + run your inference stack inside an isolated DS8.0 environment.
 
 ---
 
-### 🟧 Trajectory Tracking
+### 🟧 Yolo POSE
 
-<p align="center"><img width="70%" src="https://user-images.githubusercontent.com/33729709/215127343-b540a737-d3bc-4fe8-8835-050497d325a3.gif"></p>
+<p align="center"><img width="70%" src="pose_demo.gif"></p>
 
 🔗 `DeepStream-Python/`
 
