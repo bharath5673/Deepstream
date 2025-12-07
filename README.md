@@ -9,7 +9,6 @@
 </p>
 
 
-
 <p align="center">
   <b>YOLO Detection • YOLO Pose • Tracking • ROI Analytics • Multi-Stream Pipelines • Python First</b><br>
   <b>Fully Optimized · Low Code · Docker Ready · Production Tested</b>
